@@ -1,10 +1,15 @@
 package bitget
 
 import (
+	"crypto"
 	"crypto/hmac"
+	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
-	"log/slog"
+	"encoding/pem"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -19,6 +24,37 @@ func DecodeAndCheckResponse(v CheckableResponse) requests.Unmarshaller {
 		}
 		return v.Error()
 	}
+}
+
+func hmacSign(plainText []byte, key string) string {
+	h := hmac.New(sha256.New, []byte(key))
+	_, err := h.Write(plainText)
+	if err != nil {
+		panic(err)
+	}
+	return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
+
+func rsaSign(plainText []byte, privateKey string) string {
+	block, _ := pem.Decode([]byte(privateKey))
+	if block == nil {
+		panic(errors.New("bad public key"))
+	}
+	private, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		panic(err)
+	}
+
+	hash := sha256.New()
+	if _, err = hash.Write(plainText); err != nil {
+		panic(err)
+	}
+
+	sign, err := rsa.SignPKCS1v15(rand.Reader, private, crypto.SHA256, hash.Sum(nil))
+	if err != nil {
+		panic(err)
+	}
+	return base64.StdEncoding.EncodeToString(sign)
 }
 
 func Sign(opt Option) requests.BeforeRequestHook {
@@ -37,12 +73,12 @@ func Sign(opt Option) requests.BeforeRequestHook {
 		}
 
 		// make sign
-		h := hmac.New(sha256.New, []byte(opt.SecretKey))
-		if _, err := h.Write([]byte(signer.Bytes())); err != nil {
-			slog.Error("failed to sign the request", slog.String("error", err.Error()))
-			return
+		var sign string
+		if opt.PrivateKey == "" {
+			sign = hmacSign(signer.Bytes(), opt.SecretKey)
+		} else {
+			sign = rsaSign(signer.Bytes(), opt.PrivateKey)
 		}
-		sign := base64.StdEncoding.EncodeToString(h.Sum(nil))
 
 		// set header
 		request.Header.Set(HeaderSign, sign)

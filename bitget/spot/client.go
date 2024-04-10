@@ -13,12 +13,10 @@ type SpotClientV2 struct {
 	opt     bitget.Option
 }
 
-func NewSpotClient(opt bitget.Option) *SpotClientV2 {
+func NewSpotClientV2(opt bitget.Option) *SpotClientV2 {
 	client := requests.NewSession(
 		requests.WithClient(http.DefaultClient),
-		requests.WithBeforeHooks(bitget.Sign(opt), requests.LogRequest(nil)),
-		requests.WithAfterHooks(requests.LogResponse(nil)), // TODO: remove
+		requests.WithBeforeHooks(bitget.Sign(opt)),
 	)
 	return &SpotClientV2{client: client, baseURL: bitget.BaseURL, opt: opt}
 }
-
