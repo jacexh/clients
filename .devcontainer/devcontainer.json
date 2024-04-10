@@ -12,7 +12,7 @@
 	},
 
 	"remoteEnv":  {
-		"GOPROXY": "https://goproxy.cn,direct",
+		"GOPROXY": "https://goproxy.cn,direct"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -47,7 +47,6 @@
 				"oderwat.indent-rainbow",
 				"kennylong.kubernetes-yaml-formatter",
 				"emeraldwalk.RunOnSave",
-				"usernamehw.errorlens",
 				"mhutchie.git-graph",
 				"github.vscode-github-actions"
 			]
