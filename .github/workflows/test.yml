@@ -12,8 +12,9 @@ jobs:
       modules: ${{ steps.filter.outputs.changes }}
     steps:
     - uses: actions/checkout@v4
-      name: Check out code into the Go module directory
+      name: Check out code into directory
     - uses: dorny/paths-filter@v3
+      name: Detect Module Changes
       id: filter
       with:
         filters: |
@@ -27,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        modules: ${{ fromJSON(needs.detect-changes.output.modules) }}
+        modules: ${{ fromJSON(needs.detect-changes.outputs.modules) }}
     steps:
     - uses: actions/checkout@v4
       name: Check out code into the Go module directory
