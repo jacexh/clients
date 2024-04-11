@@ -38,6 +38,5 @@ jobs:
       name: Set up Go 1.x
       with:
         go-version: ^1.22
-    - run: |
-        cd ${{ matrix.modules }}
-        go test -v ./...
+    - working-directory: ${{ matrix.modules }}
+      run: go test -v ./...
