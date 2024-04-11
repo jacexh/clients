@@ -11,6 +11,8 @@ jobs:
     outputs:
       modules: ${{ steps.filter.outputs.changes }}
     steps:
+    - uses: actions/checkout@v4
+      name: Check out code into the Go module directory
     - uses: dorny/paths-filter@v3
       id: filter
       with:
