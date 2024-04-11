@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu
     needs: [detect-changes]
     continue-on-error: true
+    if: ${{ needs.detect-changes.outputs.modules != '[]' }}
     strategy:
       fail-fast: false
       matrix:
