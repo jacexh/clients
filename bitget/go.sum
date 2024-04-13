@@ -1,2 +1,4 @@
 github.com/jacexh/requests v0.3.2 h1:OEQTkzJAhw6RhcJytBTMHrLnl2BXw7BJMkJ9z+7iyBs=
 github.com/jacexh/requests v0.3.2/go.mod h1:difW4DPsysh7JVtWzo81Soz8PcwE3NYH2FBFSD4Op1w=
+github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
+github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
