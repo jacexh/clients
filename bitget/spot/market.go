@@ -14,7 +14,7 @@ func (sc *SpotClientV2) GetTickers(ctx context.Context, symbol string) (*Respons
 	res := new(ResponseGetTickers)
 	_, _, err := sc.client.GetWithContext(
 		ctx, sc.baseURL+"/api/v2/spot/market/tickers",
-		requests.Params{Query: map[string]string{"symbol": symbol}},
+		requests.Params{Query: requests.Any{"symbol": symbol}},
 		bitget.DecodeAndCheckResponse(res),
 	)
 	return res, err
@@ -24,7 +24,7 @@ func (sc *SpotClientV2) GetTickers(ctx context.Context, symbol string) (*Respons
 func (sc *SpotClientV2) GetCoins(ctx context.Context, coin string) (*ResponseGetCoins, error) {
 	res := new(ResponseGetCoins)
 	_, _, err := sc.client.GetWithContext(ctx, sc.baseURL+"/api/v2/spot/public/coins",
-		requests.Params{Query: map[string]string{"coin": coin}},
+		requests.Params{Query: requests.Any{"coin": coin}},
 		bitget.DecodeAndCheckResponse(res),
 	)
 	return res, err
@@ -34,7 +34,7 @@ func (sc *SpotClientV2) GetCoins(ctx context.Context, coin string) (*ResponseGet
 func (sc *SpotClientV2) GetSymbols(ctx context.Context, symbol string) (*ResponseGetSymbols, error) {
 	res := new(ResponseGetSymbols)
 	_, _, err := sc.client.GetWithContext(ctx, sc.baseURL+"/api/v2/spot/public/symbols",
-		requests.Params{Query: map[string]string{"symbol": symbol}},
+		requests.Params{Query: requests.Any{"symbol": symbol}},
 		bitget.DecodeAndCheckResponse(res))
 	return res, err
 }
@@ -52,7 +52,7 @@ func (sc *SpotClientV2) GetVIPFeeRate(ctx context.Context) (*ResponseGetVIPFeeRa
 func (sc *SpotClientV2) MergeDepth(ctx context.Context, symbol string, precision string, limit string) (*ResponseMergeDepth, error) {
 	res := new(ResponseMergeDepth)
 	_, _, err := sc.client.GetWithContext(ctx, sc.baseURL+"/api/v2/spot/market/merge-depth",
-		requests.Params{Query: map[string]string{"symbol": symbol, "precision": precision, "limit": limit}},
+		requests.Params{Query: requests.Any{"symbol": symbol, "precision": precision, "limit": limit}},
 		bitget.DecodeAndCheckResponse(res),
 	)
 	return res, err
@@ -60,7 +60,7 @@ func (sc *SpotClientV2) MergeDepth(ctx context.Context, symbol string, precision
 
 // GetOrderBook https://www.bitget.com/zh-CN/api-doc/spot/market/Get-Orderbook
 func (sc *SpotClientV2) GetOrderBook(ctx context.Context, symbol, tp string, limit int) (*ResponseGetOrderBook, error) {
-	q := map[string]string{"symbol": symbol, "type": tp}
+	q := requests.Any{"symbol": symbol, "type": tp}
 	if limit > 0 {
 		q["limit"] = strconv.Itoa(limit)
 	}
@@ -72,15 +72,15 @@ func (sc *SpotClientV2) GetOrderBook(ctx context.Context, symbol, tp string, lim
 
 // GetCandles https://www.bitget.com/zh-CN/api-doc/spot/market/Get-Candle-Data
 func (sc *SpotClientV2) GetCandles(ctx context.Context, symbol, granularity string, start, end time.Time, limit int) (*ResponseGetCandles, error) {
-	q := map[string]string{"symbol": symbol, "granularity": granularity}
+	q := requests.Any{"symbol": symbol, "granularity": granularity}
 	if !start.IsZero() {
-		q["startTime"] = strconv.FormatInt(start.UnixMilli(), 10)
+		q["startTime"] = start.UnixMilli()
 	}
 	if !end.IsZero() {
-		q["endTime"] = strconv.FormatInt(end.UnixMilli(), 10)
+		q["endTime"] = end.UnixMilli()
 	}
 	if limit > 0 {
-		q["limit"] = strconv.Itoa(limit)
+		q["limit"] = limit
 	}
 
 	ret := new(ResponseGetCandles)
@@ -90,12 +90,12 @@ func (sc *SpotClientV2) GetCandles(ctx context.Context, symbol, granularity stri
 
 // GetHistoryCandles https://www.bitget.com/zh-CN/api-doc/spot/market/Get-History-Candle-Data
 func (sc *SpotClientV2) GetHistoryCandles(ctx context.Context, symbol, granularity string, end time.Time, limit int) (*ResponseGetCandles, error) {
-	q := map[string]string{"symbol": symbol, "granularity": granularity}
+	q := requests.Any{"symbol": symbol, "granularity": granularity}
 	if !end.IsZero() {
-		q["endTime"] = strconv.FormatInt(end.UnixMilli(), 10)
+		q["endTime"] = end.UnixMilli()
 	}
 	if limit > 0 {
-		q["limit"] = strconv.Itoa(limit)
+		q["limit"] = limit
 	}
 
 	ret := new(ResponseGetCandles)
@@ -105,9 +105,9 @@ func (sc *SpotClientV2) GetHistoryCandles(ctx context.Context, symbol, granulari
 
 // GetRecentTrades https://www.bitget.com/zh-CN/api-doc/spot/market/Get-Recent-Trades
 func (sc *SpotClientV2) GetRecentTrades(ctx context.Context, symbol string, limit int) (*ResponseGetRecentTrades, error) {
-	q := map[string]string{"symbol": symbol}
+	q := requests.Any{"symbol": symbol}
 	if limit > 0 {
-		q["limit"] = strconv.Itoa(limit)
+		q["limit"] = limit
 	}
 
 	res := new(ResponseGetRecentTrades)
@@ -117,18 +117,18 @@ func (sc *SpotClientV2) GetRecentTrades(ctx context.Context, symbol string, limi
 
 // GetMarketTrades https://www.bitget.com/zh-CN/api-doc/spot/market/Get-Market-Trades
 func (sc *SpotClientV2) GetMarketTrades(ctx context.Context, symbol string, idLessThan int, start, end time.Time, limit int) (*ResponseGetRecentTrades, error) {
-	q := map[string]string{"symbol": symbol}
+	q := requests.Any{"symbol": symbol}
 	if idLessThan > 0 {
-		q["idLessThan"] = strconv.Itoa(int(idLessThan))
+		q["idLessThan"] = idLessThan
 	}
 	if !start.IsZero() {
-		q["startTime"] = strconv.FormatInt(start.UnixMilli(), 10)
+		q["startTime"] = start.UnixMilli()
 	}
 	if !end.IsZero() {
-		q["endTime"] = strconv.FormatInt(end.UnixMilli(), 10)
+		q["endTime"] = end.UnixMilli()
 	}
 	if limit > 0 {
-		q["limit"] = strconv.Itoa(limit)
+		q["limit"] = limit
 	}
 
 	res := new(ResponseGetRecentTrades)

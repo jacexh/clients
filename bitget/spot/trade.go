@@ -2,7 +2,6 @@ package spot
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/jacexh/clients/bitget"
 	"github.com/jacexh/requests"
@@ -46,21 +45,21 @@ func (sc *SpotClientV2) CancelSymbolOrders(ctx context.Context, symbol string) (
 
 // GetFills https://www.bitget.com/zh-CN/api-doc/spot/trade/Get-Fills
 func (sc *SpotClientV2) GetFills(ctx context.Context, req *RequestGetFills) (*ResponseGetFills, error) {
-	q := map[string]string{"symbol": req.Symbol}
+	q := requests.Any{"symbol": req.Symbol}
 	if req.OrderID > 0 {
-		q["orderId"] = strconv.Itoa(req.OrderID)
+		q["orderId"] = req.OrderID
 	}
 	if !req.Start.IsZero() {
-		q["startTime"] = strconv.Itoa(int(req.Start.UnixMilli()))
+		q["startTime"] = req.Start.UnixMilli()
 	}
 	if !req.End.IsZero() {
-		q["endTime"] = strconv.Itoa(int(req.End.UnixMilli()))
+		q["endTime"] = req.End.UnixMilli()
 	}
 	if req.Limit > 0 {
-		q["limit"] = strconv.Itoa(req.Limit)
+		q["limit"] = req.Limit
 	}
 	if req.IDLessThan > 0 {
-		q["idLessThan"] = strconv.Itoa(req.IDLessThan)
+		q["idLessThan"] = req.IDLessThan
 	}
 
 	res := new(ResponseGetFills)
@@ -70,18 +69,18 @@ func (sc *SpotClientV2) GetFills(ctx context.Context, req *RequestGetFills) (*Re
 }
 
 func (sc *SpotClientV2) GetOrder(ctx context.Context, req *RequestGetOrder) (*ResponseGetOrder, error) {
-	q := make(map[string]string)
+	q := requests.Any{}
 	if req.OrderID > 0 {
-		q["orderId"] = strconv.Itoa(req.OrderID)
+		q["orderId"] = req.OrderID
 	}
 	if req.ClientOrderID != "" {
 		q["clientOid"] = req.ClientOrderID
 	}
 	if !req.RequestTime.IsZero() {
-		q["requestTime"] = strconv.FormatInt(req.RequestTime.UnixMilli(), 10)
+		q["requestTime"] = req.RequestTime.UnixMilli()
 	}
 	if req.ReceiveWindow > 0 {
-		q["receiveWindow"] = strconv.FormatInt(req.ReceiveWindow.Milliseconds(), 10)
+		q["receiveWindow"] = req.ReceiveWindow.Milliseconds()
 	}
 
 	ret := new(ResponseGetOrder)
@@ -91,33 +90,33 @@ func (sc *SpotClientV2) GetOrder(ctx context.Context, req *RequestGetOrder) (*Re
 
 // GetUnfilledOrders https://www.bitget.com/zh-CN/api-doc/spot/trade/Get-Unfilled-Orders
 func (sc *SpotClientV2) GetUnfilledOrders(ctx context.Context, req *RequestGetUnfilledOrders) (*ResponseGetUnfilledOrders, error) {
-	q := make(map[string]string)
+	q := requests.Any{}
 	if req.Symbol != "" {
 		q["symbol"] = req.Symbol
 	}
 	if !req.StartTime.IsZero() {
-		q["startTime"] = strconv.FormatInt(req.StartTime.UnixMilli(), 10)
+		q["startTime"] = req.StartTime.UnixMilli()
 	}
 	if !req.EndTime.IsZero() {
-		q["endTime"] = strconv.FormatInt(req.EndTime.UnixMilli(), 10)
+		q["endTime"] = req.EndTime.UnixMilli()
 	}
 	if req.IDLessThan > 0 {
-		q["idLessThan"] = strconv.Itoa(req.IDLessThan)
+		q["idLessThan"] = req.IDLessThan
 	}
 	if req.Limit > 0 {
-		q["limit"] = strconv.Itoa(req.Limit)
+		q["limit"] = req.Limit
 	}
 	if req.OrderID > 0 {
-		q["orderId"] = strconv.Itoa(req.OrderID)
+		q["orderId"] = req.OrderID
 	}
 	if req.TPSLType != "" {
 		q["tpslType"] = req.TPSLType
 	}
 	if !req.RequestTime.IsZero() {
-		q["requestTime"] = strconv.FormatInt(req.RequestTime.UnixMilli(), 10)
+		q["requestTime"] = req.RequestTime.UnixMilli()
 	}
 	if req.ReceiveWindow > 0 {
-		q["receiveWindow"] = strconv.FormatInt(req.ReceiveWindow.Milliseconds(), 10)
+		q["receiveWindow"] = req.ReceiveWindow.Milliseconds()
 	}
 
 	res := new(ResponseGetUnfilledOrders)
@@ -127,33 +126,33 @@ func (sc *SpotClientV2) GetUnfilledOrders(ctx context.Context, req *RequestGetUn
 
 // GetUnfilledOrders https://www.bitget.com/zh-CN/api-doc/spot/trade/Get-History-Orders
 func (sc *SpotClientV2) GetHistoryOrders(ctx context.Context, req *RequestGetUnfilledOrders) (*ResponseGetHistoryOrders, error) {
-	q := make(map[string]string)
+	q := requests.Any{}
 	if req.Symbol != "" {
 		q["symbol"] = req.Symbol
 	}
 	if !req.StartTime.IsZero() {
-		q["startTime"] = strconv.FormatInt(req.StartTime.UnixMilli(), 10)
+		q["startTime"] = req.StartTime.UnixMilli()
 	}
 	if !req.EndTime.IsZero() {
-		q["endTime"] = strconv.FormatInt(req.EndTime.UnixMilli(), 10)
+		q["endTime"] = req.EndTime.UnixMilli()
 	}
 	if req.IDLessThan > 0 {
-		q["idLessThan"] = strconv.Itoa(req.IDLessThan)
+		q["idLessThan"] = req.IDLessThan
 	}
 	if req.Limit > 0 {
-		q["limit"] = strconv.Itoa(req.Limit)
+		q["limit"] = req.Limit
 	}
 	if req.OrderID > 0 {
-		q["orderId"] = strconv.Itoa(req.OrderID)
+		q["orderId"] = req.OrderID
 	}
 	if req.TPSLType != "" {
 		q["tpslType"] = req.TPSLType
 	}
 	if !req.RequestTime.IsZero() {
-		q["requestTime"] = strconv.FormatInt(req.RequestTime.UnixMilli(), 10)
+		q["requestTime"] = req.RequestTime.UnixMilli()
 	}
 	if req.ReceiveWindow > 0 {
-		q["receiveWindow"] = strconv.FormatInt(req.ReceiveWindow.Milliseconds(), 10)
+		q["receiveWindow"] = req.ReceiveWindow.Milliseconds()
 	}
 
 	res := new(ResponseGetHistoryOrders)
