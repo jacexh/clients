@@ -3,7 +3,6 @@ package spot
 import (
 	"bytes"
 	"encoding/json"
-	"log/slog"
 	"strconv"
 	"time"
 
@@ -452,7 +451,6 @@ func (fee *OrderFeeDetail) UnmarshalJSON(data []byte) error {
 }
 
 func (ts *Timestamp) UnmarshalJSON(data []byte) error {
-	slog.Info(string(data))
 	d, err := strconv.ParseInt(string(data[1:len(data)-1]), 10, 64)
 	if err != nil {
 		return err
