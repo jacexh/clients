@@ -5,6 +5,10 @@ on:
     - master
     - release/**
     - feature/**
+  pull_request:
+    branches:
+    - master
+    - release/**
 jobs:
   detect-changes:
     name: Detect Changes
