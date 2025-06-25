@@ -1,0 +1,27 @@
+name: Release Modules
+on:
+  push:
+    tags:
+    - v**
+permissions:
+  contents: write
+
+jobs:
+  auto-tag:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        packages:
+        - circle
+        - bitget
+        - foobar
+    steps:
+    - uses: actions/checkout@v4
+      name: Check out code into the Go module directory
+    - name: Auto Tag
+      run: |
+        git config --global user.name 'Github Action'
+        git config --global user.email 'jacexh@users.noreply.github.com'
+        git tag ${{ matrix.packages }}/${{ github.ref_name }}
+        git push origin --tags
