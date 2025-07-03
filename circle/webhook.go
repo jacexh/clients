@@ -122,7 +122,7 @@ func (client *CircleW3SClient) UpdateNotificationSubscription(ctx context.Contex
 	return ret.Data, nil
 }
 
-func (client *CircleW3SClient) DeleteNotionficationSubscription(ctx context.Context, id string) error {
+func (client *CircleW3SClient) DeleteNotificationSubscription(ctx context.Context, id string) error {
 	if id == "" {
 		return fmt.Errorf("%w: subscription ID cannot be empty", ErrCircleAPI)
 	}
@@ -131,12 +131,9 @@ func (client *CircleW3SClient) DeleteNotionficationSubscription(ctx context.Cont
 	return CheckResponse(err, ret)
 }
 
-func (client *CircleW3SClient) GetNotificationSignaturePublicKey(ctx context.Context, id string) (*PublicKey, error) {
-	if id == "" {
-		return nil, fmt.Errorf("%w: subscription ID cannot be empty", ErrCircleAPI)
-	}
+func (client *CircleW3SClient) GetNotificationSignaturePublicKey(ctx context.Context) (*PublicKey, error) {
 	ret := new(GetNotificationSignaturePublicKey)
-	_, _, err := client.session.GetWithContext(ctx, client.opt.baseURL+"/v2/notifications/publicKey/"+id, requests.Params{}, requests.UnmarshalJSON(ret))
+	_, _, err := client.session.GetWithContext(ctx, client.opt.baseURL+"/v2/notifications/publicKey", requests.Params{}, requests.UnmarshalJSON(ret))
 	if err := CheckResponse(err, ret); err != nil {
 		return nil, err
 	}

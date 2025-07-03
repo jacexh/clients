@@ -14,6 +14,6 @@ type PingResponse struct {
 
 func (client *CircleW3SClient) Ping(ctx context.Context) error {
 	ret := new(PingResponse)
-	_, _, err := client.session.GetWithContext(ctx, "/ping", requests.Params{}, requests.UnmarshalJSON(ret))
+	_, _, err := client.session.GetWithContext(ctx, client.opt.baseURL+"/ping", requests.Params{}, requests.UnmarshalJSON(ret))
 	return CheckResponse(err, ret)
 }
